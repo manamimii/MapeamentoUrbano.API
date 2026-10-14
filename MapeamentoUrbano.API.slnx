@@ -1,3 +1,5 @@
 <Solution>
   <Project Path="MapeamentoUrbano.API/MapeamentoUrbano.API.csproj" />
+  <Project Path="MapeamentoUrbano.Data/MapeamentoUrbano.Data.csproj" />
+  <Project Path="MapeamentoUrbano.Domain/MapeamentoUrbano.Domain.csproj" />
 </Solution>

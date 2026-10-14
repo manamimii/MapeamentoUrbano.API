@@ -1,23 +1,50 @@
 ﻿{
-  "$schema": "https://json.schemastore.org/launchsettings.json",
   "profiles": {
-    "http": {
+    "MapeamentoUrbano": {
       "commandName": "Project",
-      "dotnetRunMessages": true,
-      "launchBrowser": false,
-      "applicationUrl": "http://localhost:5005",
+      "launchBrowser": true,
+      "launchUrl": "swagger",
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "JWT_SECRET_KEY": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9",
+        "ASPNETCORE_CONTEXT_DATA_SOURCE": "Host=ep-broad-dawn-b6kpkah9-pooler.c-2.sa-east-1.aws.neon.tech;Port=5432;Database=neondb;Username=neondb_owner;Password=npg_U4YXRsBZ7jGg;SSL Mode=Require;Channel Binding=Require",
+        "DEFAULT_PASSWORD": "DEFAULT_PASSWORD"
+      },
+      "dotnetRunMessages": true,
+      "applicationUrl": "https://localhost:7151;http://localhost:5041"
+    },
+    "IIS Express": {
+      "commandName": "IISExpress",
+      "launchBrowser": true,
+      "launchUrl": "swagger",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "JWT_SECRET_KEY": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9",
+        "ASPNETCORE_CONTEXT_DATA_SOURCE": "Host=ep-broad-dawn-b6kpkah9-pooler.c-2.sa-east-1.aws.neon.tech;Port=5432;Database=neondb;Username=neondb_owner;Password=npg_U4YXRsBZ7jGg;SSL Mode=Require;Channel Binding=Require",
+        "DEFAULT_PASSWORD": "DEFAULT_PASSWORD"
       }
     },
-    "https": {
-      "commandName": "Project",
-      "dotnetRunMessages": true,
-      "launchBrowser": false,
-      "applicationUrl": "https://localhost:7216;http://localhost:5005",
+    "Docker": {
+      "commandName": "Docker",
+      "launchBrowser": true,
+      "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}/swagger",
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
-      }
+        "ASPNETCORE_URLS": "https://+:443;http://+:80",
+        "JWT_SECRET_KEY": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9",
+        "ASPNETCORE_CONTEXT_DATA_SOURCE": "Host=ep-broad-dawn-b6kpkah9-pooler.c-2.sa-east-1.aws.neon.tech;Port=5432;Database=neondb;Username=neondb_owner;Password=npg_U4YXRsBZ7jGg;SSL Mode=Require;Channel Binding=Require",
+        "DEFAULT_PASSWORD": "DEFAULT_PASSWORD"
+      },
+      "publishAllPorts": true,
+      "useSSL": true
+    }
+  },
+  "$schema": "https://json.schemastore.org/launchsettings.json",
+  "iisSettings": {
+    "windowsAuthentication": false,
+    "anonymousAuthentication": true,
+    "iisExpress": {
+      "applicationUrl": "http://localhost:25367",
+      "sslPort": 44336
     }
   }
 }
