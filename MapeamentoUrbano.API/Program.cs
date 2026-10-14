@@ -49,6 +49,8 @@ builder.Services.AddSwaggerGen(c =>
         });
 });
 
+var port = Environment.GetEnvironmentVariable("PORT") ?? "8080";
+builder.WebHost.UseUrls($"http://0.0.0.0:{port}");
 var app = builder.Build();
 
 using (var serviceScope = app.Services.GetRequiredService<IServiceScopeFactory>().CreateScope())
