@@ -3,7 +3,7 @@
   "services": {
     "api": {
       "root": ".",
-      "entrypoint": "Dockerfile.vercel",
+      "entrypoint": "MapeamentoUrbano.API/Dockerfile.vercel",
       "runtime": "container"
     }
   },
