@@ -40,7 +40,7 @@ namespace MapeamentoUrbano.API.Applications
                 #endregion
 
                 Event evt = eventDTO.MapperToEntity();
-                evt.UserId = VariableConstants.MasterId;
+                evt.UserId = VariableConstants.MasterUserId;
                 //evt.UserId = TokenHelper.GetUserId(httpContext);
 
                 _unitOfWork.EventRepository.Add(evt);
