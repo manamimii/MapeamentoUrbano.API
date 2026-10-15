@@ -31,7 +31,7 @@ namespace Rigging.API.Controllers
 
         [HttpPost]
         [Route("renewToken")]
-        [Authorize]
+        //[Authorize]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ResponseDTO<object>))]
         [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(ResponseDTO<object>))]
         [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ResponseDTO<object>))]

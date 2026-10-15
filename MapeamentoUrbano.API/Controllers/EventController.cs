@@ -10,7 +10,7 @@ namespace MapeamentoUrbano.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
+    //[Authorize]
     public class EventController : Controller
     {
         public readonly EventApp _eventApp;

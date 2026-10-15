@@ -9,7 +9,7 @@ namespace MapeamentoUrbano.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
+    //[Authorize]
     public class ValidationController : Controller
     {
         public readonly ValidationApp _validationApp;

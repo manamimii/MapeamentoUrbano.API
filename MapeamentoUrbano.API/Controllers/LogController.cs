@@ -9,7 +9,7 @@ namespace MapeamentoUrbano.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
+    //[Authorize]
     public class LogController
     {
         public readonly LogApp _logApp;

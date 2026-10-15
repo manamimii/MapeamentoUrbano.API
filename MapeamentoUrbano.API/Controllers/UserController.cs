@@ -119,7 +119,7 @@ namespace MapeamentoUrbano.API.Controllers
         }
 
         [HttpPatch("ChangePassword")]
-        [Authorize]
+        //[Authorize]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ResponseDTO<object>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ResponseDTO<UserDTO>))]
         [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(ResponseDTO<object>))]
