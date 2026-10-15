@@ -10,10 +10,12 @@ namespace MapeamentoUrbano.API.DependencyInjection
     {
         public static void Configure(IServiceCollection services, IConfiguration configuration)
         {
+            services.AddTransient<EventApp>();
             services.AddTransient<JWTKeyApp>();
             services.AddTransient<LogApp>();
             services.AddTransient<LoginApp>();
             services.AddTransient<UserApp>();
+            services.AddTransient<ValidationApp>();
             services.AddTransient<PasswordHelper>();
 
             #region [Auth]
