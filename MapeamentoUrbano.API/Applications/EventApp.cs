@@ -51,7 +51,7 @@ namespace MapeamentoUrbano.API.Applications
             }
             catch (Exception ex)
             {
-                return new ResponseDTO<EventDTO>(statusCode: StatusCodes.Status500InternalServerError);
+                return new ResponseDTO<EventDTO>(statusCode: StatusCodes.Status500InternalServerError, message: ex.Message);
             }
         }
 
