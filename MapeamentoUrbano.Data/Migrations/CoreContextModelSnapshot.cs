@@ -22,6 +22,45 @@ namespace MapeamentoUrbano.Data.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
+            modelBuilder.Entity("MapeamentoUrbano.Domain.Entities.Event", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<float>("Latitude")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Longitude")
+                        .HasColumnType("real");
+
+                    b.Property<byte[]>("Photo")
+                        .IsRequired()
+                        .HasColumnType("bytea");
+
+                    b.Property<DateTime>("RegistrationDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("UpdateTime")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Event");
+                });
+
             modelBuilder.Entity("MapeamentoUrbano.Domain.Entities.LogBase", b =>
                 {
                     b.Property<Guid>("Id")
@@ -159,6 +198,17 @@ namespace MapeamentoUrbano.Data.Migrations
                             UserNameNormalized = "MASTER",
                             UserPassword = "AITD5hKgy9KAb92qx88Wzid/4YxLHQJhkGDrwVt2rNlwjfyNc56vDg5NAUmuKeryRg=="
                         });
+                });
+
+            modelBuilder.Entity("MapeamentoUrbano.Domain.Entities.Event", b =>
+                {
+                    b.HasOne("MapeamentoUrbano.Domain.Entities.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("MapeamentoUrbano.Domain.Entities.LogBase", b =>
