@@ -27,7 +27,10 @@ namespace MapeamentoUrbano.API.Applications
         internal ResponseDTO<object> Login(LoginDTO loginModel)
         {
             if (loginModel == null)
-                throw new ArgumentNullException(nameof(loginModel));
+                return new ResponseDTO<object>(statusCode: StatusCodes.Status400BadRequest, message: "Dados de login não informados.");
+
+            if (string.IsNullOrWhiteSpace(loginModel.Email) || string.IsNullOrWhiteSpace(loginModel.Password))
+                return new ResponseDTO<object>(statusCode: StatusCodes.Status400BadRequest, message: "Email e senha são obrigatórios.");
 
             try
             {
