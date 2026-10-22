@@ -19,7 +19,6 @@ namespace MapeamentoUrbano.API.Controllers
         }
 
         [HttpPost("Create")]
-        [Authorize(Roles = "Master")]
         [Produces(MediaTypeNames.Application.Json)]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(ResponseDTO<UserDTO>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ResponseDTO<UserDTO>))]
