@@ -32,7 +32,7 @@ namespace MapeamentoUrbano.API.Applications
         }
 
         #region [CRUD]
-        public ResponseDTO<UserDTO> Create(HttpContext httpContext, UserDTO userDTO)
+        public ResponseDTO<UserDTO> Create(UserDTO userDTO)
         {
             try
             {
@@ -43,18 +43,18 @@ namespace MapeamentoUrbano.API.Applications
                 #endregion
 
                 User user = userDTO.MapperToEntity();
-                    
-                user.UserPassword = _passwordHelper.HashPassword(_defaultPassword);
+
+                user.UserPassword = _passwordHelper.HashPassword(userDTO.UserPassword);
                 user.UserNameNormalized = userDTO.UserName.StringNormalization();
                 user.FirstAccess = true;
-                user.RoleId = VariableConstants.AdminId;
+                user.RoleId = VariableConstants.UserId;
                  
                 _unitOfWork.UserRepository.Add(user);
 
                 if (_unitOfWork.Commit() > 0)
                 { 
                     userDTO.Id = user.Id;
-                    _logApp.CreateLog(new LogDTO(ModuleConstants.User, ActionConstants.Create, TokenHelper.GetUserId(httpContext)));
+                    //_logApp.CreateLog(new LogDTO(ModuleConstants.User, ActionConstants.Create, TokenHelper.GetUserId(httpContext)));
                     return new ResponseDTO<UserDTO>(statusCode: StatusCodes.Status201Created, entity: userDTO);
                 }
 

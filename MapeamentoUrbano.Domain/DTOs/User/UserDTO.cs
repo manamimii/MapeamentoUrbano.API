@@ -8,6 +8,7 @@ namespace MapeamentoUrbano.Domain.DTOs.User
         public Guid Id { get; set; }
         public string UserName { get; set; }
         public string UserEmail { get; set; }
+        public string UserPassword { get; set; }
 
         public UserDTO()
         {
