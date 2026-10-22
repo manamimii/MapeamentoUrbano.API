@@ -37,7 +37,7 @@ namespace MapeamentoUrbano.API.Applications
                     return new ResponseDTO<object>(StatusCodes.Status404NotFound, LoginMessage.NOT_FOUND);
                  
                 if (_passwordHelper.VerifyHashedPassword(user.UserPassword, loginModel.Password))
-                    return new ResponseDTO<object>(StatusCodes.Status200OK, _jwtKeyApp.GenerateUserToken(user));
+                    return new ResponseDTO<object>(statusCode: StatusCodes.Status200OK, entity: _jwtKeyApp.GenerateUserToken(user));
 
                 return new ResponseDTO<object>(StatusCodes.Status400BadRequest, LoginMessage.WRONG_PASSWORD);
             }
