@@ -22,6 +22,52 @@ namespace MapeamentoUrbano.Data.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
+            modelBuilder.Entity("MapeamentoUrbano.Domain.Entities.Address", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("City")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<double>("Latitude")
+                        .HasColumnType("double precision");
+
+                    b.Property<double>("Longitude")
+                        .HasColumnType("double precision");
+
+                    b.Property<string>("Neighborhood")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Number")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("State")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Street")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("ZipCode")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Address");
+                });
+
             modelBuilder.Entity("MapeamentoUrbano.Domain.Entities.Event", b =>
                 {
                     b.Property<Guid>("Id")
@@ -41,6 +87,9 @@ namespace MapeamentoUrbano.Data.Migrations
                     b.Property<byte[]>("Photo")
                         .IsRequired()
                         .HasColumnType("bytea");
+
+                    b.Property<int>("Points")
+                        .HasColumnType("integer");
 
                     b.Property<DateTime>("RegistrationDate")
                         .HasColumnType("timestamp with time zone");
@@ -198,6 +247,17 @@ namespace MapeamentoUrbano.Data.Migrations
                             UserNameNormalized = "MASTER",
                             UserPassword = "AITD5hKgy9KAb92qx88Wzid/4YxLHQJhkGDrwVt2rNlwjfyNc56vDg5NAUmuKeryRg=="
                         });
+                });
+
+            modelBuilder.Entity("MapeamentoUrbano.Domain.Entities.Address", b =>
+                {
+                    b.HasOne("MapeamentoUrbano.Domain.Entities.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("MapeamentoUrbano.Domain.Entities.Event", b =>

@@ -11,6 +11,7 @@ namespace MapeamentoUrbano.Domain.Entities
         public float Longitude { get; set; }
         public int Status { get; set; }
         public string Description { get; set; }
+        public int Points { get; set; }
         public DateTime RegistrationDate { get; set; }
         public DateTime UpdateTime { get; set; }
         public Guid UserId { get; set; }

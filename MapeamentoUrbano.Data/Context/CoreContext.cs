@@ -6,6 +6,7 @@ namespace MapeamentoUrbano.Data.Context
 {
     public class CoreContext : DbContext
     {
+        public DbSet<Address> Address { get; set; }
         public DbSet<Event> Event { get; set; }
         public DbSet<LogBase> Log { get; set; }
         public DbSet<Role>? Role { get; set; }

@@ -9,7 +9,6 @@ namespace MapeamentoUrbano.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    //[Authorize]
     public class ValidationController : Controller
     {
         public readonly ValidationApp _validationApp;
@@ -20,6 +19,7 @@ namespace MapeamentoUrbano.API.Controllers
         }
 
         [HttpPut("Validate")]
+        [Authorize(Roles = "Master")]
         [Produces(MediaTypeNames.Application.Json)]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ResponseDTO<object>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ResponseDTO<object>))]

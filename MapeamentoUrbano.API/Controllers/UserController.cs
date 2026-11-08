@@ -19,6 +19,7 @@ namespace MapeamentoUrbano.API.Controllers
         }
 
         [HttpPost("Create")]
+        [AllowAnonymous]
         [Produces(MediaTypeNames.Application.Json)]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(ResponseDTO<UserDTO>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ResponseDTO<UserDTO>))]
@@ -32,7 +33,7 @@ namespace MapeamentoUrbano.API.Controllers
         }
 
         [HttpPut("Update")]
-        [Authorize(Roles = "Master")]
+        [Authorize]
         [Produces(MediaTypeNames.Application.Json)]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ResponseDTO<UserDTO>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ResponseDTO<UserDTO>))]
@@ -51,7 +52,7 @@ namespace MapeamentoUrbano.API.Controllers
         /// </summary>
         /// <returns>Status code and User</returns>
         [HttpGet("Get/{id}")]
-        [Authorize(Roles = "Master")]
+        [Authorize]
         [Produces(MediaTypeNames.Application.Json)]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ResponseDTO<UserDTO>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ResponseDTO<UserDTO>))]
@@ -70,7 +71,7 @@ namespace MapeamentoUrbano.API.Controllers
         /// </summary>
         /// <returns>Status code</returns>
         [HttpDelete("Delete/{id}")]
-        [Authorize(Roles = "Master")]
+        [Authorize]
         [Produces(MediaTypeNames.Application.Json)]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ResponseDTO<object>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ResponseDTO<object>))]
@@ -118,7 +119,7 @@ namespace MapeamentoUrbano.API.Controllers
         }
 
         [HttpPatch("ChangePassword")]
-        //[Authorize]
+        [Authorize]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ResponseDTO<object>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ResponseDTO<UserDTO>))]
         [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(ResponseDTO<object>))]
