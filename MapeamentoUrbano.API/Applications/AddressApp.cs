@@ -95,13 +95,15 @@ namespace MapeamentoUrbano.API.Applications
 
                 _unitOfWork.UserRepository.AddOrUpdate(user);
 
-                if (_unitOfWork.Commit() <= 0)
-                    return new ResponseDTO<AddressDTO>(statusCode: StatusCodes.Status400BadRequest, message: OperationMessage.STATUS_400_INVALID_PAYLOAD_INCONSISTENT);
+                if (_unitOfWork.Commit() > 0)
+                {
+                    addressDTO.Id = address.Id;
+                    //_logApp.CreateLog(new LogDTO(ModuleConstants.Address, ActionConstants.Create, user.Id));
 
-                addressDTO.Id = address.Id;
-                _logApp.CreateLog(new LogDTO(ModuleConstants.Address, ActionConstants.Create, user.Id));
-                
-                return new ResponseDTO<AddressDTO>(statusCode: StatusCodes.Status201Created, entity: addressDTO);
+                    return new ResponseDTO<AddressDTO>(statusCode: StatusCodes.Status201Created, entity: addressDTO);
+                }
+                 
+                return new ResponseDTO<AddressDTO>(statusCode: StatusCodes.Status400BadRequest, message: OperationMessage.STATUS_400_INVALID_PAYLOAD_INCONSISTENT);
             }
             catch (Exception ex)
             {
@@ -149,11 +151,9 @@ namespace MapeamentoUrbano.API.Applications
 
                 if (_unitOfWork.Commit() > 0)
                 {
-                    _logApp.CreateLog(new LogDTO(ModuleConstants.Address, ActionConstants.Update, userId));
+                    //_logApp.CreateLog(new LogDTO(ModuleConstants.Address, ActionConstants.Update, userId));
 
-                    return new ResponseDTO<AddressDTO>(
-                        statusCode: StatusCodes.Status200OK,
-                        entity: addressDTO);
+                    return new ResponseDTO<AddressDTO>(statusCode: StatusCodes.Status200OK, entity: addressDTO);
                 }
 
                 return new ResponseDTO<AddressDTO>(statusCode: StatusCodes.Status400BadRequest, message: OperationMessage.STATUS_400_INVALID_PAYLOAD_INCONSISTENT);
