@@ -28,28 +28,6 @@ namespace MapeamentoUrbano.Domain.Helpers
             return Guid.Empty;
         }
 
-        public static Guid GetExclusiveId(HttpContext? httpContext)
-        {
-            if (httpContext?.Request?.Headers == null || 
-                !httpContext.Request.Headers.TryGetValue("Authorization", out Microsoft.Extensions.Primitives.StringValues token))
-                return Guid.Empty;
-
-            if (string.IsNullOrWhiteSpace(token))
-                return Guid.Empty;
-
-            Claim[]? claims = DeserializeJwtToken(token);
-            if (claims != null && claims.Any())
-            {
-                Claim? exclusiveIdClaim = claims.FirstOrDefault(c => c.Type == "Id");
-                if (exclusiveIdClaim != null && Guid.TryParse(exclusiveIdClaim.Value, out Guid exclusiveId))
-                {
-                    return exclusiveId;
-                }
-            }
-
-            return Guid.Empty;
-        }
-
         public static Claim[]? DeserializeJwtToken(string token)
         {
             if (token.Contains("Bearer "))

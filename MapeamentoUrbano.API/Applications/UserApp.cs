@@ -77,9 +77,11 @@ namespace MapeamentoUrbano.API.Applications
                 #endregion
 
                 User? user = GetUserById(userDTO.Id);
-                if (user != null)
+                User? editingUser = GetUserById(TokenHelper.GetUserId(httpContext));
+
+                if (user != null && editingUser != null)
                 {
-                    if (!(user.RoleId.Equals(VariableConstants.MasterId)))
+                    if ((!(user.RoleId.Equals(VariableConstants.MasterId))) && ((user.Id == editingUser.Id) || (editingUser.RoleId.Equals(VariableConstants.MasterId))))
                     {
                         user.MapperToEntity(userDTO);
                         user.UserNameNormalized = userDTO.UserName.StringNormalization();
@@ -88,7 +90,7 @@ namespace MapeamentoUrbano.API.Applications
 
                         if (_unitOfWork.Commit() > 0)
                         {
-                            _logApp.CreateLog(new LogDTO(ModuleConstants.User, ActionConstants.Update, TokenHelper.GetUserId(httpContext)));
+                            //_logApp.CreateLog(new LogDTO(ModuleConstants.User, ActionConstants.Update, TokenHelper.GetUserId(httpContext)));
                             return new ResponseDTO<UserDTO>(statusCode: StatusCodes.Status200OK, entity: userDTO);
                         }
 
@@ -113,7 +115,7 @@ namespace MapeamentoUrbano.API.Applications
                 var user = GetUserById(id);
                 if (user == null)
                 {
-                    _logApp.CreateLog(new LogDTO(ModuleConstants.User, ActionConstants.View, TokenHelper.GetUserId(httpContext)));
+                    //_logApp.CreateLog(new LogDTO(ModuleConstants.User, ActionConstants.View, TokenHelper.GetUserId(httpContext)));
                     return new ResponseDTO<UserDTO>(statusCode: StatusCodes.Status404NotFound, message: OperationMessage.STATUS_404_NOT_FOUND);
                 }
 
@@ -139,7 +141,7 @@ namespace MapeamentoUrbano.API.Applications
                 _unitOfWork.UserRepository.Delete(user);
                 if (_unitOfWork.Commit() > 0)
                 {
-                    _logApp.CreateLog(new LogDTO(ModuleConstants.User, ActionConstants.Delete, TokenHelper.GetUserId(httpContext)));
+                    //_logApp.CreateLog(new LogDTO(ModuleConstants.User, ActionConstants.Delete, TokenHelper.GetUserId(httpContext)));
                     return new ResponseDTO<object>(statusCode: StatusCodes.Status200OK);
                 }
 
@@ -180,6 +182,25 @@ namespace MapeamentoUrbano.API.Applications
         }
         #endregion
 
+        #region [GetUserProfile]
+        public ResponseDTO<UserProfileDTO> GetUserProfile(HttpContext httpContext)
+        {
+            try
+            {
+                User user = GetUserById(TokenHelper.GetUserId(httpContext));
+
+                if (user == null)
+                    return new ResponseDTO<UserProfileDTO>(statusCode: StatusCodes.Status404NotFound, message: OperationMessage.STATUS_404_NOT_FOUND);
+
+                return new ResponseDTO<UserProfileDTO>(statusCode: StatusCodes.Status200OK, entity: new UserProfileDTO(user));
+            }
+            catch(Exception ex)
+            {
+                return new ResponseDTO<UserProfileDTO>(statusCode: StatusCodes.Status500InternalServerError, message: ex.Message);
+            }
+        }
+        #endregion
+
         #region [Password]
         internal ResponseDTO<object> ResetPassword(HttpContext httpContext, Guid id)
         {
@@ -199,7 +220,7 @@ namespace MapeamentoUrbano.API.Applications
                 _unitOfWork.UserRepository.Update(user);
                 if (_unitOfWork.Commit() > 0)
                 {
-                    _logApp.CreateLog(new LogDTO(ModuleConstants.User, ActionConstants.ResetPassword, TokenHelper.GetUserId(httpContext)));
+                    //_logApp.CreateLog(new LogDTO(ModuleConstants.User, ActionConstants.ResetPassword, TokenHelper.GetUserId(httpContext)));
                     return new ResponseDTO<object>(statusCode: StatusCodes.Status200OK);
                 }
 
@@ -224,12 +245,11 @@ namespace MapeamentoUrbano.API.Applications
                     return new ResponseDTO<object>(statusCode: StatusCodes.Status400BadRequest, message: OperationMessage.STATUS_400_BAD_REQUEST);
 
                 user.UserPassword = _passwordHelper.HashPassword(password);
-                user.FirstAccess = false; 
 
                 _unitOfWork.UserRepository.Update(user);
                 if (_unitOfWork.Commit() > 0)
                 {
-                    _logApp.CreateLog(new LogDTO(ModuleConstants.User, ActionConstants.ChangePassword, user.Id));
+                    //_logApp.CreateLog(new LogDTO(ModuleConstants.User, ActionConstants.ChangePassword, user.Id));
                     return new ResponseDTO<object>(statusCode: StatusCodes.Status200OK);
                 }
 
@@ -251,20 +271,26 @@ namespace MapeamentoUrbano.API.Applications
             if (!string.IsNullOrEmpty(userDTO.UserName))
             {
                 errors.AddRange(StringHelper.ValidateString(userDTO.UserName, VariableConstants.UserName));
+
+                if (DoesUserNameExists(userDTO))
+                    errors.Add("Já existe um usuário cadastrado com esse nome de usuário.");
             }
             else
             {
                 errors.Add("Nome não pode ser nulo");
             }
-            if (DoesUserExists(userDTO.UserEmail))
-                errors.Add("Não é possível criar um novo usuário com um e-mail já cadastrado.");
+            if (DoesUserEmailExists(userDTO))
+                errors.Add("Já existe um usuário cadastrado com esse e-mail.");
 
             return errors;
         }
         #endregion
 
-        private bool DoesUserExists(string userEmail) =>
-            _unitOfWork.UserRepository.GetAll(x => x.UserEmail == userEmail).Any();
+        private bool DoesUserNameExists(UserDTO user) =>
+            _unitOfWork.UserRepository.GetAll(x => x.UserName == user.UserName && x.Id != user.Id).Any();
+
+        private bool DoesUserEmailExists(UserDTO user) =>
+            _unitOfWork.UserRepository.GetAll(x => x.UserEmail == user.UserEmail && x.Id != user.Id).Any();
 
         internal User? GetUserById(Guid id) =>
             _unitOfWork.UserRepository.Get(x => x.Id.Equals(id));

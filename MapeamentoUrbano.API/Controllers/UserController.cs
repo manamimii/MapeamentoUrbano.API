@@ -104,6 +104,21 @@ namespace MapeamentoUrbano.API.Controllers
             return await _userApp.GetListAsync(name, sortOrder, pageSize, pageIndex);
         }
 
+        /// <summary>
+        /// Returns a user profile
+        /// </summary>
+        /// <returns>User information</returns>
+        [HttpGet("GetUserProfile")]
+        [Authorize]
+        [Produces(MediaTypeNames.Application.Json)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        public ResponseDTO<UserProfileDTO> GetUserProfile()
+        {
+            return _userApp.GetUserProfile(HttpContext);
+        }
+
         [HttpPatch("ResetPassword/{id}")]
         [Authorize(Roles = "Master")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ResponseDTO<UserDTO>))]

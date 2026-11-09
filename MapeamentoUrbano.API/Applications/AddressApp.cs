@@ -171,7 +171,7 @@ namespace MapeamentoUrbano.API.Applications
                 var address = GetAddressById(id);
                 if (address == null)
                 {
-                    _logApp.CreateLog(new LogDTO(ModuleConstants.Address, ActionConstants.View, TokenHelper.GetUserId(httpContext)));
+                    //_logApp.CreateLog(new LogDTO(ModuleConstants.Address, ActionConstants.View, TokenHelper.GetUserId(httpContext)));
                     return new ResponseDTO<AddressDTO>(statusCode: StatusCodes.Status404NotFound, message: OperationMessage.STATUS_404_NOT_FOUND);
                 }
 
@@ -194,7 +194,7 @@ namespace MapeamentoUrbano.API.Applications
                 _unitOfWork.AddressRepository.Delete(address);
                 if (_unitOfWork.Commit() > 0)
                 {
-                    _logApp.CreateLog(new LogDTO(ModuleConstants.Address, ActionConstants.Delete, TokenHelper.GetUserId(httpContext)));
+                    //_logApp.CreateLog(new LogDTO(ModuleConstants.Address, ActionConstants.Delete, TokenHelper.GetUserId(httpContext)));
                     return new ResponseDTO<object>(statusCode: StatusCodes.Status200OK);
                 }
 
@@ -205,6 +205,10 @@ namespace MapeamentoUrbano.API.Applications
                 return new ResponseDTO<object>(statusCode: StatusCodes.Status500InternalServerError, message: ex.Message);
             }
         }
+        #endregion
+
+        #region [GetUserAddress]
+
         #endregion
 
         #region [Helpers]

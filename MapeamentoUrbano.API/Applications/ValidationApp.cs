@@ -36,7 +36,7 @@ namespace MapeamentoUrbano.API.Applications
 
                 if (_unitOfWork.Commit() > 0)
                 {
-                    _logApp.CreateLog(new LogDTO(ModuleConstants.Address, ActionConstants.Create, user.Id));
+                    //_logApp.CreateLog(new LogDTO(ModuleConstants.Address, ActionConstants.Create, user.Id));
                     return new ResponseDTO<object>(statusCode: StatusCodes.Status200OK);
                 }
 

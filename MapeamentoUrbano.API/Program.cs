@@ -49,8 +49,13 @@ builder.Services.AddSwaggerGen(c =>
         });
 });
 
-var port = Environment.GetEnvironmentVariable("PORT") ?? "8080";
-builder.WebHost.UseUrls($"http://0.0.0.0:{port}");
+var port = Environment.GetEnvironmentVariable("PORT");
+
+if (!string.IsNullOrEmpty(port))
+{
+    builder.WebHost.UseUrls($"http://0.0.0.0:{port}");
+}
+
 var app = builder.Build();
 
 using (var serviceScope = app.Services.GetRequiredService<IServiceScopeFactory>().CreateScope())
@@ -69,7 +74,7 @@ app.UseSwaggerUI(c =>
     c.OAuthUseBasicAuthenticationWithAccessCodeGrant();
 });
 
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
 
 app.UseCors(x => x
                 .AllowAnyOrigin()

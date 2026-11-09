@@ -152,7 +152,7 @@ namespace MapeamentoUrbano.API.Applications
         #endregion 
 
         #region [Paginated]
-        public async Task<PaginatedItemsDTO<EventDTO>> GetListAsync(string? sortOrder, int pageSize, int pageIndex, HttpContext httpContext)
+        public async Task<PaginatedItemsDTO<PaginatedEventDTO>> GetListAsync(string? sortOrder, int pageSize, int pageIndex, HttpContext httpContext)
         {
             var user = _userApp.GetUserById(TokenHelper.GetUserId(httpContext));
 
@@ -172,17 +172,16 @@ namespace MapeamentoUrbano.API.Applications
             {
                 SortOrder.Date => GenericSort.SortByDescending(events, a => a.RegistrationDate),
                 SortOrder.DateDesc => GenericSort.SortByAscending(events, a => a.RegistrationDate),
-                _ => GenericSort.SortByAscending(events, a => a.RegistrationDate)
+                _ => GenericSort.SortByDescending(events, a => a.RegistrationDate)
             };
             #endregion
 
-            var itemsOnPage = await GenericSort.SkipTakeAndSelectItemsAsync(itemsOrderedEnumerable, pageSize, pageIndex, item => new EventDTO(item));
+            var itemsOnPage = await GenericSort.SkipTakeAndSelectItemsAsync(itemsOrderedEnumerable, pageSize, pageIndex, item => new PaginatedEventDTO(item));
             var totalItems = await events.CountAsync();
 
-            return new PaginatedItemsDTO<EventDTO>(pageIndex, pageSize, totalItems, itemsOnPage);
+            return new PaginatedItemsDTO<PaginatedEventDTO>(pageIndex, pageSize, totalItems, itemsOnPage);
         }
         #endregion
-
 
         #region [Validation]
         public List<string> Validate(EventDTO eventDTO)

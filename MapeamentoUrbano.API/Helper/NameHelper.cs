@@ -6,7 +6,7 @@ namespace MapeamentoUrbano.API.Helper
 {
     public static partial class NameHelper
     {
-        [GeneratedRegex("^[A-Za-zÀ-ÖØ-öø-ÿ '-]+$")]
+        [GeneratedRegex("^[0-9A-Za-zÀ-ÖØ-öø-ÿ '-]+$")]
         private static partial Regex MyRegex();
 
         public static bool VerifyIfNameContainsSpecialCharacters(string? name) =>
