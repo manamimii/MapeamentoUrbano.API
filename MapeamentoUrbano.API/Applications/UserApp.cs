@@ -155,9 +155,9 @@ namespace MapeamentoUrbano.API.Applications
         #endregion
 
         #region [Paginated]
-        public async Task<PaginatedItemsDTO<UserDTO>> GetListAsync(string? name, string? sortOrder, int pageSize, int pageIndex)
+        public async Task<PaginatedItemsDTO<PaginatedUserDTO>> GetListAsync(string? name, string? sortOrder, int pageSize, int pageIndex)
         {
-            IQueryable<User> users = _unitOfWork.UserRepository.GetAll();
+            IQueryable<User> users = _unitOfWork.UserRepository.GetAll().Include(x => x.Role);
 
             #region [Filter]
             if (!string.IsNullOrEmpty(name))
@@ -175,10 +175,10 @@ namespace MapeamentoUrbano.API.Applications
             };
             #endregion
 
-            var itemsOnPage = await GenericSort.SkipTakeAndSelectItemsAsync(itemsOrderedEnumerable, pageSize, pageIndex, user => new UserDTO(user));
+            var itemsOnPage = await GenericSort.SkipTakeAndSelectItemsAsync(itemsOrderedEnumerable, pageSize, pageIndex, user => new PaginatedUserDTO(user));
             var totalItems = await users.CountAsync();
 
-            return new PaginatedItemsDTO<UserDTO>(pageIndex, pageSize, totalItems, itemsOnPage);
+            return new PaginatedItemsDTO<PaginatedUserDTO>(pageIndex, pageSize, totalItems, itemsOnPage);
         }
         #endregion
 

@@ -95,7 +95,7 @@ namespace MapeamentoUrbano.API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        public async Task<PaginatedItemsDTO<UserDTO>> Get(
+        public async Task<PaginatedItemsDTO<PaginatedUserDTO>> Get(
             [FromQuery] string? name,
             [FromQuery] string? sortOrder,
             [FromQuery] int pageSize = 10,
