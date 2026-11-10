@@ -32,7 +32,7 @@ namespace MapeamentoUrbano.API.Applications
         }
 
         #region [CRUD]
-        public ResponseDTO<UserDTO> Create(UserDTO userDTO)
+        public ResponseDTO<UserDTO> Create(HttpContext httpContext, UserDTO userDTO)
         {
             try
             {
@@ -44,11 +44,22 @@ namespace MapeamentoUrbano.API.Applications
 
                 User user = userDTO.MapperToEntity();
 
-                user.UserPassword = _passwordHelper.HashPassword(userDTO.UserPassword);
                 user.UserNameNormalized = userDTO.UserName.StringNormalization();
                 user.FirstAccess = true;
-                user.RoleId = VariableConstants.UserId;
-                 
+
+                User loggedUser = GetUserById(TokenHelper.GetUserId(httpContext));
+
+                if(loggedUser != null && loggedUser.RoleId.Equals(VariableConstants.MasterId))
+                {
+                    user.RoleId = VariableConstants.AdminId;
+                    user.UserPassword = _passwordHelper.HashPassword(_defaultPassword);
+                }
+                else
+                {
+                    user.UserPassword = _passwordHelper.HashPassword(userDTO.UserPassword);
+                    user.RoleId = VariableConstants.UserId;
+                }
+ 
                 _unitOfWork.UserRepository.Add(user);
 
                 if (_unitOfWork.Commit() > 0)
@@ -293,7 +304,7 @@ namespace MapeamentoUrbano.API.Applications
             _unitOfWork.UserRepository.GetAll(x => x.UserEmail == user.UserEmail && x.Id != user.Id).Any();
 
         internal User? GetUserById(Guid id) =>
-            _unitOfWork.UserRepository.Get(x => x.Id.Equals(id));
+            _unitOfWork.UserRepository.GetAll(x => x.Id.Equals(id)).Include(x => x.Role).FirstOrDefault();
 
         public User? GetUserByLogin(string email) =>
             _unitOfWork.UserRepository.GetAll(x => x.UserEmail.Equals(email)).Include(x => x.Role).FirstOrDefault();

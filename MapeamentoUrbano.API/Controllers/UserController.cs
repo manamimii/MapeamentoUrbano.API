@@ -28,7 +28,7 @@ namespace MapeamentoUrbano.API.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(ResponseDTO<UserDTO>))]
         public ActionResult<ResponseDTO<UserDTO>> Create([FromBody] UserDTO userDTO)
         {
-            var response = _userApp.Create(userDTO);
+            var response = _userApp.Create(HttpContext, userDTO);
             return StatusCode(response.StatusCode, response);
         }
 
