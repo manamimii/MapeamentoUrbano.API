@@ -4,9 +4,11 @@ namespace MapeamentoUrbano.Domain.Interfaces.UnitOfWork
 {
     public interface IUnitOfWork : IDisposable
     {
+        IAwardRepository AwardRepository { get; }
         IAddressRepository AddressRepository { get; }
         IEventRepository EventRepository { get; }
         ILogRepository LogRepository { get; }
+        IMedalsRepository MedalsRepository { get; }
         IRoleRepository RoleRepository { get; }
         IUserRepository UserRepository { get; }
 

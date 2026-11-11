@@ -6,6 +6,7 @@ namespace MapeamentoUrbano.Data.Context
 {
     public class CoreContext : DbContext
     {
+        public DbSet<Award> Award { get; set; }
         public DbSet<Address> Address { get; set; }
         public DbSet<Event> Event { get; set; }
         public DbSet<LogBase> Log { get; set; }
@@ -17,9 +18,6 @@ namespace MapeamentoUrbano.Data.Context
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-
-            #region [One to one]
-            #endregion
 
             #region [Seeds]
             SeedRoles.Seed(modelBuilder);

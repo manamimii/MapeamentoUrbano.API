@@ -75,7 +75,7 @@ namespace MapeamentoUrbano.API.Applications
                 User user = _userApp.GetUserById(TokenHelper.GetUserId(httpContext));
 
                 if (user == null)
-                    return new ResponseDTO<AddressDTO>(statusCode: StatusCodes.Status404NotFound, message: "Usuário não encontrado.");
+                    return new ResponseDTO<AddressDTO>(statusCode: StatusCodes.Status404NotFound, message: OperationMessage.STATUS_404_NOT_FOUND);
 
                 Address address = addressDTO.MapperToEntity();
                 address.UserId = user.Id;
@@ -133,7 +133,7 @@ namespace MapeamentoUrbano.API.Applications
                 var userId = TokenHelper.GetUserId(httpContext);
 
                 if (address.UserId != userId)
-                    return new ResponseDTO<AddressDTO>(statusCode: StatusCodes.Status403Forbidden, message: "Você não possui permissão para alterar este endereço.");
+                    return new ResponseDTO<AddressDTO>(statusCode: StatusCodes.Status403Forbidden, message: OperationMessage.STATUS_403_FORBIDDEN);
 
                 string fullAddress = $"{addressDTO.Street}, {addressDTO.Number}, {addressDTO.Neighborhood}, {addressDTO.City}, {addressDTO.State}, Brasil";
 

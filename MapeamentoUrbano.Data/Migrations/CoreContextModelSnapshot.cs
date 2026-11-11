@@ -68,6 +68,36 @@ namespace MapeamentoUrbano.Data.Migrations
                     b.ToTable("Address");
                 });
 
+            modelBuilder.Entity("MapeamentoUrbano.Domain.Entities.Award", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("AwardDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<bool>("FirstView")
+                        .HasColumnType("boolean");
+
+                    b.Property<Guid>("MedalId")
+                        .HasColumnType("uuid");
+
+                    b.Property<int>("Points")
+                        .HasColumnType("integer");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("MedalId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Award");
+                });
+
             modelBuilder.Entity("MapeamentoUrbano.Domain.Entities.Event", b =>
                 {
                     b.Property<Guid>("Id")
@@ -256,6 +286,25 @@ namespace MapeamentoUrbano.Data.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("MapeamentoUrbano.Domain.Entities.Award", b =>
+                {
+                    b.HasOne("MapeamentoUrbano.Domain.Entities.Medals", "Medal")
+                        .WithMany()
+                        .HasForeignKey("MedalId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("MapeamentoUrbano.Domain.Entities.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Medal");
 
                     b.Navigation("User");
                 });

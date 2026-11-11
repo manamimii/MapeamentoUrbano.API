@@ -101,17 +101,17 @@ namespace MapeamentoUrbano.API.Applications
                 Event? eventEntity = GetEventById(eventDTO.Id);
 
                 if (eventEntity == null)
-                    return new ResponseDTO<EventDTO>(statusCode: StatusCodes.Status404NotFound, message: "Evento não encontrado.");
+                    return new ResponseDTO<EventDTO>(statusCode: StatusCodes.Status404NotFound, message: OperationMessage.STATUS_404_NOT_FOUND);
 
                 if (eventEntity.UserId != userId)
-                    return new ResponseDTO<EventDTO>(statusCode: StatusCodes.Status403Forbidden, message: "Você não possui permissão para alterar este evento.");
+                    return new ResponseDTO<EventDTO>(statusCode: StatusCodes.Status403Forbidden, message: OperationMessage.STATUS_403_FORBIDDEN);
 
                 Address? address = _unitOfWork.AddressRepository
                     .GetAll()
                     .FirstOrDefault(x => x.UserId == userId);
 
                 if (address == null || address.Latitude.Equals(null) || address.Longitude.Equals(null))
-                    return new ResponseDTO<EventDTO>(statusCode: StatusCodes.Status400BadRequest,message: "Endereço do usuário não possui coordenadas válidas.");
+                    return new ResponseDTO<EventDTO>(statusCode: StatusCodes.Status400BadRequest,message: OperationMessage.STATUS_400_BAD_REQUEST);
 
 
                 eventEntity.MapperToEntity(eventDTO);
