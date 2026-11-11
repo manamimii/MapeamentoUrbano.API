@@ -158,8 +158,8 @@ namespace MapeamentoUrbano.API.Applications
 
             IQueryable<Event> events = null;
 
-            if (user.RoleId.Equals(VariableConstants.MasterId))
-                events = _unitOfWork.EventRepository.GetAll();
+            if (user.RoleId.Equals(VariableConstants.MasterId) || user.RoleId.Equals(VariableConstants.AdminId))
+                events = _unitOfWork.EventRepository.GetAll().Include(x => x.User);
             else
             {
                 events = _unitOfWork.EventRepository.GetAll(x => x.UserId.Equals(user.Id));

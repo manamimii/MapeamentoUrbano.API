@@ -9,6 +9,7 @@ namespace MapeamentoUrbano.Domain.DTOs.Event
         public byte[] Photo { get; set; }
         public string Description { get; set; }
         public int Points { get; set; }
+        public string? User { get; set; }
 
         public PaginatedEventDTO()
         {
@@ -20,6 +21,7 @@ namespace MapeamentoUrbano.Domain.DTOs.Event
             Photo = evt.Photo;
             Description = evt.Description;
             Points = evt.Points;
+            User = evt.User.UserName;
         }
     }
 }
