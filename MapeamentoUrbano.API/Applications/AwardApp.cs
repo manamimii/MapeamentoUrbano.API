@@ -34,14 +34,24 @@ namespace MapeamentoUrbano.API.Applications
                 DateTime now = DateTime.UtcNow;
 
                 DateTime? lastAwardDate = _unitOfWork.AwardRepository.GetAll()
-                    .OrderByDescending(x => x.AwardDate).Select(x => (DateTime?)x.AwardDate).FirstOrDefault();
+                    .OrderByDescending(x => x.AwardDate)
+                    .Select(x => (DateTime?)x.AwardDate)
+                    .FirstOrDefault();
 
-                var events = _unitOfWork.EventRepository.GetAll()
-                    .Where(x => (!lastAwardDate.HasValue || x.RegistrationDate > lastAwardDate.Value) && x.RegistrationDate <= now).ToList();
-
-                var ranking = events.GroupBy(x => x.UserId).Select(g => new { UserId = g.Key, Points = g.Sum(x => x.Points) })
-                    .Where(x => x.Points >= 1).OrderByDescending(x => x.Points)
-                    .ThenBy(x => x.UserId).ToList();
+                var ranking = _unitOfWork.EventRepository.GetAll()
+                    .Where(x =>
+                        (!lastAwardDate.HasValue || x.RegistrationDate > lastAwardDate.Value) &&
+                        x.RegistrationDate <= now)
+                    .GroupBy(x => x.UserId)
+                    .Select(g => new
+                    {
+                        UserId = g.Key,
+                        Points = g.Sum(x => x.Points)
+                    })
+                    .Where(x => x.Points >= 1)
+                    .OrderByDescending(x => x.Points)
+                    .ThenBy(x => x.UserId)
+                    .ToList();
 
                 if (!ranking.Any())
                     return new ResponseDTO<object>(statusCode: StatusCodes.Status400BadRequest, message: OperationMessage.STATUS_400_BAD_REQUEST);
@@ -51,6 +61,9 @@ namespace MapeamentoUrbano.API.Applications
                 var gold = medals.FirstOrDefault(x => x.Id == VariableConstants.GoldMedal);
                 var silver = medals.FirstOrDefault(x => x.Id == VariableConstants.SilverMedal);
                 var bronze = medals.FirstOrDefault(x => x.Id == VariableConstants.BronzeMedal);
+
+                if (gold == null || silver == null || bronze == null)
+                    return new ResponseDTO<object>(statusCode: StatusCodes.Status400BadRequest, message: "Uma ou mais medalhas não foram encontradas.");
 
                 int position = 0;
                 int? previousPoints = null;
@@ -105,31 +118,37 @@ namespace MapeamentoUrbano.API.Applications
 
         public async Task<PaginatedItemsDTO<PaginatedAwardDTO>> GetListAsync(string? sortOrder, int pageSize, int pageIndex)
         {
-            var awards = _unitOfWork.AwardRepository.GetAll().GroupBy(x => x.AwardDate).Select(g => new PaginatedAwardDTO
-            {
-                AwardDate = g.Key,
-                UserGold = g.Where(x => x.Medal.Name == "Ouro").Select(x => x.User.UserName).FirstOrDefault(),
-                UserSilver = g.Where(x => x.Medal.Name == "Prata").Select(x => x.User.UserName).FirstOrDefault(),
-                UserBronze = g.Where(x => x.Medal.Name == "Bronze").Select(x => x.User.UserName).FirstOrDefault()
-            });
+            var awards = await _unitOfWork.AwardRepository.GetAll().Include(x => x.User).AsNoTracking().ToListAsync();
+
+            var groupedAwards = awards.GroupBy(x => x.AwardDate)
+                .Select(g => new PaginatedAwardDTO
+                {
+                    AwardDate = g.Key,
+                    UserGold = g.FirstOrDefault(x => x.MedalId == VariableConstants.GoldMedal)?.User.UserName,
+                    UserGoldPoints = g.FirstOrDefault(x => x.MedalId == VariableConstants.GoldMedal)?.Points ?? 0,
+                    UserSilver = g.FirstOrDefault(x => x.MedalId == VariableConstants.SilverMedal)?.User.UserName,
+                    UserSilverPoints = g.FirstOrDefault(x => x.MedalId == VariableConstants.SilverMedal)?.Points ?? 0,
+                    UserBronze = g.FirstOrDefault(x => x.MedalId == VariableConstants.BronzeMedal)?.User.UserName,
+                    UserBronzePoints = g.FirstOrDefault(x => x.MedalId == VariableConstants.BronzeMedal)?.Points ?? 0,
+                });
 
             #region [Order]
             Enum.TryParse(value: sortOrder, ignoreCase: true, out SortOrder filterSortOrder);
 
             var itemsOrderedEnumerable = filterSortOrder switch
             {
-                SortOrder.DateDesc => GenericSort.SortByDescending(awards, a => a.AwardDate),
-                SortOrder.Date => GenericSort.SortByAscending(awards, a => a.AwardDate),
-                _ => GenericSort.SortByDescending(awards, a => a.AwardDate)
+                SortOrder.DateDesc => groupedAwards.OrderByDescending(x => x.AwardDate),
+                SortOrder.Date => groupedAwards.OrderBy(x => x.AwardDate),
+                _ => groupedAwards.OrderByDescending(x => x.AwardDate)
             };
-
             #endregion
 
-            var itemsOnPage = await GenericSort.SkipTakeAndSelectItemsAsync(itemsOrderedEnumerable, pageSize, pageIndex, award => award);
+            var totalItems = itemsOrderedEnumerable.Count();
+            var itemsOnPage = itemsOrderedEnumerable.Skip((pageIndex - 1) * pageSize).Take(pageSize).ToList();
 
-            var totalItems = await awards.CountAsync();
 
             return new PaginatedItemsDTO<PaginatedAwardDTO>(pageIndex, pageSize, totalItems, itemsOnPage);
         }
+
     }
 }

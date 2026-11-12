@@ -8,6 +8,6 @@
         public static Guid UserId = new("591b47b6-c0e8-43fd-8a38-986a2f897f61");
         public static Guid GoldMedal = new("3c55e49f-fd3c-43ba-88d3-b990db7e5d01");
         public static Guid SilverMedal = new("59c32bce-38ca-4d5d-a73f-76848fdf9f4d");
-        public static Guid BronzeMedal = new("59c32bce-38ca-4d5d-a73f-76848fdf9f4d");
+        public static Guid BronzeMedal = new("043187e9-e471-43d8-8978-7fe73c83995d");
     }
 }
