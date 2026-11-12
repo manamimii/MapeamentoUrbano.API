@@ -213,6 +213,7 @@ namespace MapeamentoUrbano.API.Applications
         }
         #endregion
 
+        #region [Helpers]
         #region [Validation]
         public List<string> Validate(EventDTO eventDTO)
         {
@@ -225,5 +226,6 @@ namespace MapeamentoUrbano.API.Applications
 
         internal Event? GetEventById(Guid id) =>
             _unitOfWork.EventRepository.Get(x => x.Id.Equals(id));
+        #endregion
     }
 }
