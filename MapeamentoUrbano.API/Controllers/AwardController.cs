@@ -44,12 +44,30 @@ namespace MapeamentoUrbano.API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        public async Task<PaginatedItemsDTO<PaginatedAwardDTO>> Get(
+        public async Task<PaginatedItemsDTO<PaginatedAwardDTO>> GetListAsync(
             [FromQuery] string? sortOrder,
             [FromQuery] int pageSize = 10,
             [FromQuery] int pageIndex = 1)
         {
             return await _awardApp.GetListAsync(sortOrder, pageSize, pageIndex);
+        }
+
+        /// <summary>
+        /// Returns a collection of User
+        /// </summary>
+        /// <returns>A collection of User</returns>
+        [HttpGet("GetProfileAwardsPaginated")]
+        [Authorize]
+        [Produces(MediaTypeNames.Application.Json)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        public PaginatedItemsDTO<ProfilePaginatedAwardDTO> GetProfileAwardsPaginated(
+            [FromQuery] string? sortOrder,
+            [FromQuery] int pageSize = 10,
+            [FromQuery] int pageIndex = 1)
+        {
+            return _awardApp.GetProfileAwardsPaginated(HttpContext, sortOrder, pageSize, pageIndex);
         }
     }
 }

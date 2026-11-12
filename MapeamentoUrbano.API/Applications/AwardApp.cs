@@ -150,5 +150,30 @@ namespace MapeamentoUrbano.API.Applications
             return new PaginatedItemsDTO<PaginatedAwardDTO>(pageIndex, pageSize, totalItems, itemsOnPage);
         }
 
+        public PaginatedItemsDTO<ProfilePaginatedAwardDTO> GetProfileAwardsPaginated(HttpContext httpContext, string? sortOrder, int pageSize, int pageIndex)
+        {
+            var userId = TokenHelper.GetUserId(httpContext);
+            var awards = _unitOfWork.AwardRepository.GetAll()
+                .Where(x => x.UserId == userId)
+                .Include(x => x.Medal)
+                .AsNoTracking()
+                .ToList();
+
+            #region [Order]
+            Enum.TryParse(value: sortOrder, ignoreCase: true, out SortOrder filterSortOrder);
+            var itemsOrderedEnumerable = filterSortOrder switch
+            {
+                SortOrder.DateDesc => awards.OrderByDescending(x => x.AwardDate),
+                SortOrder.Date => awards.OrderBy(x => x.AwardDate),
+                _ => awards.OrderByDescending(x => x.AwardDate)
+            };
+            #endregion
+
+            var totalItems = itemsOrderedEnumerable.Count();
+            var itemsOnPage = itemsOrderedEnumerable.Skip((pageIndex - 1) * pageSize).Take(pageSize).ToList();
+            var profileAwardsDTOs = itemsOnPage.Select(award => new ProfilePaginatedAwardDTO(award)).ToList();
+            return new PaginatedItemsDTO<ProfilePaginatedAwardDTO>(pageIndex, pageSize, totalItems, profileAwardsDTOs);
+        }
+
     }
 }
