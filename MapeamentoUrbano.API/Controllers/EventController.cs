@@ -100,5 +100,20 @@ namespace MapeamentoUrbano.API.Controllers
             return StatusCode(response.StatusCode, response);
         }
 
+        [HttpPut("RevaluateEvent")]
+        [Authorize]
+        [Produces(MediaTypeNames.Application.Json)]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ResponseDTO<EventDTO>))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ResponseDTO<EventDTO>))]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(ResponseDTO<EventDTO>))]
+        [ProducesResponseType(StatusCodes.Status403Forbidden, Type = typeof(ResponseDTO<EventDTO>))]
+        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ResponseDTO<EventDTO>))]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(ResponseDTO<EventDTO>))]
+        public ActionResult<ResponseDTO<EventDTO>> RevaluateEvent(Guid eventId)
+        {
+            var response = _eventApp.RevaluateEvent(HttpContext, eventId);
+            return StatusCode(response.StatusCode, response);
+        }
+
     }
 }

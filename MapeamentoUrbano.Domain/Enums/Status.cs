@@ -3,7 +3,7 @@
     public enum Status
     {
         New = 1,
-        Cancelled = 2,
+        Refused = 2,
         Reavaluate = 3,
         Approved = 4,
     }

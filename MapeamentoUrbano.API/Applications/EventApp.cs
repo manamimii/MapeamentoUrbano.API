@@ -211,6 +211,36 @@ namespace MapeamentoUrbano.API.Applications
                 return new ResponseDTO<EventDTO>(statusCode: StatusCodes.Status500InternalServerError, message: ex.Message);
             }
         }
+
+        public ResponseDTO<EventDTO> RevaluateEvent(HttpContext httpContext, Guid eventId)
+        {
+            try
+            {
+                var user = _userApp.GetUserById(TokenHelper.GetUserId(httpContext));
+                var evt = GetEventById(eventId);
+                
+                if (user == null || evt == null)
+                    return new ResponseDTO<EventDTO>(statusCode: StatusCodes.Status404NotFound, OperationMessage.STATUS_404_NOT_FOUND);
+
+
+                if (user.RoleId != evt.UserId)
+                    return new ResponseDTO<EventDTO>(statusCode: StatusCodes.Status403Forbidden, message: OperationMessage.STATUS_403_FORBIDDEN);
+
+
+                evt.Status = (int)Status.Reavaluate;
+
+                _unitOfWork.EventRepository.Update(evt);
+
+                if (_unitOfWork.Commit() > 0)
+                    return new ResponseDTO<EventDTO>(statusCode: StatusCodes.Status200OK);
+
+                return new ResponseDTO<EventDTO>(statusCode: StatusCodes.Status400BadRequest, message: OperationMessage.STATUS_400_BAD_REQUEST);
+            }
+            catch(Exception ex)
+            {
+                return new ResponseDTO<EventDTO>(statusCode: StatusCodes.Status500InternalServerError, message: ex.Message);
+            }
+        }
         #endregion
 
         #region [Helpers]
