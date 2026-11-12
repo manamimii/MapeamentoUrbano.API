@@ -208,7 +208,22 @@ namespace MapeamentoUrbano.API.Applications
         #endregion
 
         #region [GetUserAddress]
+        public ResponseDTO<AddressDTO> GetProfileAddress(HttpContext httpContext)
+        {
+            try
+            {
+                var address = _unitOfWork.AddressRepository.Get(x => x.UserId.Equals(TokenHelper.GetUserId(httpContext)));
 
+                if (address == null)
+                    return new ResponseDTO<AddressDTO>(statusCode: StatusCodes.Status404NotFound, message: OperationMessage.STATUS_404_NOT_FOUND);
+
+                return new ResponseDTO<AddressDTO>(statusCode: StatusCodes.Status200OK, entity: new AddressDTO(address));
+            }
+            catch(Exception ex)
+            {
+                return new ResponseDTO<AddressDTO>(statusCode: StatusCodes.Status500InternalServerError, message: ex.Message);
+            }
+        }
         #endregion
 
         #region [Helpers]

@@ -19,6 +19,7 @@ namespace MapeamentoUrbano.Domain.DTOs.Address
 
         public AddressDTO(Entities.Address address)
         {
+            Id = address.Id;
             Street = address.Street;
             Number = address.Number;
             Neighborhood = address.Neighborhood;

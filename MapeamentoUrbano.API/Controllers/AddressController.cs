@@ -81,5 +81,21 @@ namespace MapeamentoUrbano.API.Controllers
             var response = _addressApp.Delete(HttpContext, id);
             return StatusCode(response.StatusCode, response);
         }
+
+        /// <summary>
+        /// Get Address by user
+        /// </summary>
+        /// <returns>Status code and Address</returns>
+        [HttpGet("GetProfileAddress")]
+        [Produces(MediaTypeNames.Application.Json)]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ResponseDTO<AddressDTO>))]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(ResponseDTO<AddressDTO>))]
+        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ResponseDTO<AddressDTO>))]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(ResponseDTO<AddressDTO>))]
+        public ActionResult<ResponseDTO<AddressDTO>> GetProfileAddress()
+        {
+            var response = _addressApp.GetProfileAddress(HttpContext);
+            return StatusCode(response.StatusCode, response);
+        }
     }
 }
