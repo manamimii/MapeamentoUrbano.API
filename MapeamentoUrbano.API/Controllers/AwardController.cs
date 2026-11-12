@@ -38,7 +38,7 @@ namespace MapeamentoUrbano.API.Controllers
         /// </summary>
         /// <returns>A collection of User</returns>
         [HttpGet("Paginated")]
-        [Authorize(Roles = "Master")]
+        [Authorize]
         [Produces(MediaTypeNames.Application.Json)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -48,7 +48,7 @@ namespace MapeamentoUrbano.API.Controllers
             [FromQuery] int pageSize = 10,
             [FromQuery] int pageIndex = 1)
         {
-            return await _awardApp.GetListAsync(sortOrder, pageSize, pageIndex);
+            return await _awardApp.GetListAsync(HttpContext, sortOrder, pageSize, pageIndex);
         }
 
         /// <summary>

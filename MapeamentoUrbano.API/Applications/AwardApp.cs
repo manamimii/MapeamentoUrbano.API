@@ -116,8 +116,12 @@ namespace MapeamentoUrbano.API.Applications
             }
         }
 
-        public async Task<PaginatedItemsDTO<PaginatedAwardDTO>> GetListAsync(string? sortOrder, int pageSize, int pageIndex)
+        public async Task<PaginatedItemsDTO<PaginatedAwardDTO>> GetListAsync(HttpContext httpContext, string? sortOrder, int pageSize, int pageIndex)
         {
+            var userRole = _userApp.GetUserById(TokenHelper.GetUserId(httpContext)).RoleId;
+            if (userRole != VariableConstants.MasterId && userRole != VariableConstants.AdminId)
+                throw new UnauthorizedAccessException(OperationMessage.STATUS_403_FORBIDDEN);
+
             var awards = await _unitOfWork.AwardRepository.GetAll().Include(x => x.User).AsNoTracking().ToListAsync();
 
             var groupedAwards = awards.GroupBy(x => x.AwardDate)
