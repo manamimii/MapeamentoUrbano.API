@@ -223,7 +223,7 @@ namespace MapeamentoUrbano.API.Applications
                     return new ResponseDTO<EventDTO>(statusCode: StatusCodes.Status404NotFound, OperationMessage.STATUS_404_NOT_FOUND);
 
 
-                if (user.RoleId != evt.UserId)
+                if (user.Id != evt.UserId)
                     return new ResponseDTO<EventDTO>(statusCode: StatusCodes.Status403Forbidden, message: OperationMessage.STATUS_403_FORBIDDEN);
 
 
