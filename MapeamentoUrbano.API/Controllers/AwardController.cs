@@ -2,7 +2,6 @@
 using MapeamentoUrbano.Domain.DTOs.Address;
 using MapeamentoUrbano.Domain.DTOs.Award;
 using MapeamentoUrbano.Domain.DTOs.Base;
-using MapeamentoUrbano.Domain.DTOs.User;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Net.Mime;

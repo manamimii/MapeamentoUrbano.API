@@ -84,5 +84,21 @@ namespace MapeamentoUrbano.API.Controllers
         {
             return await _eventApp.GetListAsync(sortOrder, pageSize, pageIndex, HttpContext);
         }
+
+        [HttpPut("ValidateEvent")]
+        [Authorize(Roles = "Master, Admin")]
+        [Produces(MediaTypeNames.Application.Json)]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ResponseDTO<EventDTO>))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ResponseDTO<EventDTO>))]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(ResponseDTO<EventDTO>))]
+        [ProducesResponseType(StatusCodes.Status403Forbidden, Type = typeof(ResponseDTO<EventDTO>))]
+        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ResponseDTO<EventDTO>))]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(ResponseDTO<EventDTO>))]
+        public ActionResult<ResponseDTO<EventDTO>> ValidateEvent(Guid eventId, int status)
+        {
+            var response = _eventApp.ValidateEvent(HttpContext, eventId, status);
+            return StatusCode(response.StatusCode, response);
+        }
+
     }
 }

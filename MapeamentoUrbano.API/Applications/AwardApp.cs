@@ -41,7 +41,7 @@ namespace MapeamentoUrbano.API.Applications
                 var ranking = _unitOfWork.EventRepository.GetAll()
                     .Where(x =>
                         (!lastAwardDate.HasValue || x.RegistrationDate > lastAwardDate.Value) &&
-                        x.RegistrationDate <= now)
+                        x.RegistrationDate <= now && x.Status == (int)Status.Approved)
                     .GroupBy(x => x.UserId)
                     .Select(g => new
                     {
@@ -54,7 +54,7 @@ namespace MapeamentoUrbano.API.Applications
                     .ToList();
 
                 if (!ranking.Any())
-                    return new ResponseDTO<object>(statusCode: StatusCodes.Status400BadRequest, message: OperationMessage.STATUS_400_BAD_REQUEST);
+                    return new ResponseDTO<object>(statusCode: StatusCodes.Status400BadRequest, message: "Não foi encontrado nenhum evento válido");
 
                 var medals = _unitOfWork.MedalsRepository.GetAll().ToList();
 

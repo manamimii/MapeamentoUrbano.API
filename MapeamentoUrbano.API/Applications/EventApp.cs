@@ -71,6 +71,7 @@ namespace MapeamentoUrbano.API.Applications
 
                 Event evt = eventDTO.MapperToEntity();
                 evt.UserId = userId;
+                evt.Status = (int)Status.New;
                 evt.Points = CalculatePoints(address.Latitude, address.Longitude, eventDTO.Latitude, eventDTO.Longitude);
 
                 _unitOfWork.EventRepository.Add(evt);
@@ -183,10 +184,39 @@ namespace MapeamentoUrbano.API.Applications
         }
         #endregion
 
+        #region [ValidateEvent]
+        public ResponseDTO<EventDTO> ValidateEvent(HttpContext httpContext, Guid eventId, int status)
+        {
+            try
+            {
+                var user = _userApp.GetUserById(TokenHelper.GetUserId(httpContext));
+                if (user.RoleId != VariableConstants.MasterId && user.RoleId != VariableConstants.AdminId)
+                    return new ResponseDTO<EventDTO>(statusCode: StatusCodes.Status403Forbidden, message: OperationMessage.STATUS_403_FORBIDDEN);
+
+                var evt = GetEventById(eventId);
+                if (evt == null)
+                    return new ResponseDTO<EventDTO>(statusCode: StatusCodes.Status404NotFound, OperationMessage.STATUS_404_NOT_FOUND);
+
+                evt.Status = status;
+
+                _unitOfWork.EventRepository.Update(evt);
+
+                if (_unitOfWork.Commit() > 0)
+                    return new ResponseDTO<EventDTO>(statusCode: StatusCodes.Status200OK);
+
+                return new ResponseDTO<EventDTO>(statusCode: StatusCodes.Status400BadRequest, message: OperationMessage.STATUS_400_BAD_REQUEST);
+            }
+            catch(Exception ex)
+            {
+                return new ResponseDTO<EventDTO>(statusCode: StatusCodes.Status500InternalServerError, message: ex.Message);
+            }
+        }
+        #endregion
+
         #region [Validation]
         public List<string> Validate(EventDTO eventDTO)
         {
-            List<string> validationErrors = new List<string>();
+            List<string> validationErrors = new();
             if (string.IsNullOrEmpty(eventDTO.Description))
                 validationErrors.Add("Description is required.");
             return validationErrors;
